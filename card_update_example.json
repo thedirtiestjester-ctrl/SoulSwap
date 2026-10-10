@@ -1,0 +1,11 @@
+{
+  "type": "soulswap-card-update",
+  "schemaVersion": "1.0",
+  "cards": [{
+    "mind": "Son Goku (Dragon Ball)",
+    "body": "Videl (Dragon Ball)",
+    "rarity": "rare",
+    "variant": "Saiyan Spirit, Human Limits",
+    "flavor": "The will is limitless. The body is learning."
+  }]
+}
