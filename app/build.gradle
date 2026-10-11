@@ -7,11 +7,28 @@ android {
         applicationId 'com.soulswap.game'
         minSdk 26
         targetSdk 28
-        versionCode 4
-        versionName '0.3.2-test'
+        versionCode 5
+        versionName '0.4.0-test'
+    }
+    // Private key is supplied ONLY via runner secret or local environment.
+    def stableFile = System.getenv('SOULSWAP_SIGNING_FILE')
+    def stablePass = System.getenv('SOULSWAP_SIGNING_PASSWORD')
+    signingConfigs {
+        permanent {
+            if (stableFile && stablePass) {
+                storeFile file(stableFile)
+                storePassword stablePass
+                keyAlias 'soulswap-update'
+                keyPassword stablePass
+                storeType 'pkcs12'
+            }
+        }
     }
     buildTypes {
-        debug { minifyEnabled false }
+        debug {
+            minifyEnabled false
+            if (stableFile && stablePass) signingConfig signingConfigs.permanent
+        }
         release { minifyEnabled false }
     }
     compileOptions {

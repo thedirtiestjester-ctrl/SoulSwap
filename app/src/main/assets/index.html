@@ -21,6 +21,7 @@
 <section id="updates" class="screen"><div class="kicker">Card pack manager</div><h1 class="heading">Install Updates</h1><p class="lede">Import future SoulSwap JSON update packs directly inside the APK. The original three-card JSON export format is also accepted. Imported cards join the summon pool but are not owned until pulled. Every new card automatically supports duplicate shards, Awakening +1 to +5, skill ranks, and fusion. Existing owned cards and progress are preserved unless you restart from Settings.</p><div class="sheet"><h3>Import new cards</h3><input class="forminput" id="packFile" type="file" accept=".json,application/json"><div class="button-row"><button class="primary" id="importPack">Install Selected JSON</button><button class="secondary" id="exportPack">Export Card Data</button></div><div class="notice" id="importStatus">Ready for a SoulSwap JSON update pack.</div><textarea class="forminput hidden" rows="7" id="exportArea" readonly aria-label="Exported JSON"></textarea></div><div class="sheet"><h3>Update format v2 (v1 supported)</h3><p>A pack contains <code>type: "soulswap-card-update"</code>, <code>schemaVersion: "2.0"</code>, and a <code>cards</code> array. The original <code>1.0</code> format and legacy array imports still work. Each card may contain <code>mind</code>, <code>body</code>, <code>imageBase64</code>, <code>prompt</code>, and optional combat data. Legacy raw JSON arrays are accepted too.</p><p><b>Automatic import rule:</b> Known card pairings keep their authored combat stats. New pairings get a deterministic starter profile that can be overwritten by fields in a future pack. The game cannot infer unseen supernatural skills from images alone.</p><div class="button-row"><button class="secondary small-button" id="templatePack">Show Update Template</button></div></div><p class="footer">Offline-first. Saves stored on this device using IndexedDB and local storage.</p></section>
 <section id="settings" class="screen"><div class="kicker">Your Game · Local Save</div><h1 class="heading">Settings</h1><p class="lede">Manage your current SoulSwap save and restart your gacha adventure whenever you want.</p>
 <div class="sheet"><h3>Save Overview</h3><p id="settingsSummary">Loading save…</p><p>Your card update packs remain available for random pulls, even when you haven't summoned those cards yet.</p></div>
+<div class="sheet"><h3>Backup & Restore Save</h3><p>Export all owned cards, summons, tokens, shards, levels, and imported card packs to a JSON file. Save a copy before replacing your APK or phone.</p><div class="button-row"><button class="primary" id="exportSaveBackup">Export Complete Save Backup</button></div><label for="saveBackupFile">RESTORE A PREVIOUS SAVE BACKUP</label><input class="forminput" id="saveBackupFile" type="file" accept=".json,application/json"><div class="button-row"><button class="secondary" id="restoreSaveBackup">Restore Selected Backup</button></div><div class="notice" id="saveBackupStatus" aria-live="polite">Your save is local to this Android installation. Keep downloaded backups somewhere safe.</div></div>
 <div class="sheet danger-panel"><h3>Restart Game</h3><p>Restarting clears your owned fighters, levels, experience, shards, currencies, active fighter, and starter claim. Your next game begins with an empty collection and a new one-time free 10-pull (guaranteed SR or higher). Awakening ranks, skill improvements, universal fragments, and cosmetic unlocks are also cleared.</p>
 <label class="checkbox-row"><input type="checkbox" id="clearInstalledPacks"> Also remove all imported JSON card updates (restore original nine-card summon pool)</label>
 <p><b>This cannot be undone.</b> Type <b>RESTART</b> to enable the button.</p><input class="forminput" id="restartPhrase" type="text" placeholder="Type RESTART" autocomplete="off" autocapitalize="characters" aria-label="Type RESTART to confirm"><button class="warn" id="restartGame" disabled>Restart New Game</button><div class="notice hidden" id="restartStatus" aria-live="polite"></div></div></section>
@@ -225,6 +226,40 @@ function generatedCard(entry,i){const mind=limit(entry.mind||entry.originMind,14
 async function importPack(){const f=$('packFile').files?.[0];if(!f)return showImport('Choose a JSON file first.',true);if(f.size>35000000)return showImport('Pack is too large (>35 MB).',true);try{const raw=JSON.parse(await f.text());let rows=Array.isArray(raw)?raw:(raw.type==='soulswap-card-update'&&['1.0','2.0'].includes(raw.schemaVersion)&&Array.isArray(raw.cards))?raw.cards:null;if(!rows)throw Error('Expected legacy JSON array or type="soulswap-card-update", schemaVersion="1.0" or "2.0", cards array.');if(rows.length<1||rows.length>100)throw Error('Update must contain 1 to 100 cards.');const staged=rows.map((r,i)=>generatedCard(r,i));const merged=new Map(custom.map(c=>[c.id,c]));staged.forEach(c=>merged.set(c.id,c));await dbSet([...merged.values()]);custom=[...merged.values()];syncAll();showImport(`Installed ${staged.length} card(s). Summon pool: ${cards.length}; owned: ${ownedCards().length}. New cards are available to pull, not automatically unlocked.`);$('packFile').value=''}catch(e){showImport('Import rejected: '+e.message,true)}}
 function showImport(s,err=false){$('importStatus').textContent=s;$('importStatus').classList.toggle('error',err)}
 function outputJSON(x){$('exportArea').classList.remove('hidden');$('exportArea').value=JSON.stringify(x,null,2);$('exportArea').focus();$('exportArea').select()}
+function backupMessage(message,error=false){$('saveBackupStatus').textContent=message;$('saveBackupStatus').classList.toggle('error',error)}
+async function exportCompleteSave(){
+ try{
+  const backup={type:'soulswap-save-backup',schemaVersion:'1.0',createdAt:new Date().toISOString(),gameVersion:'0.4.0',save:state,customCards:custom};
+  const json=JSON.stringify(backup);
+  if(window.SoulSwapBridge && typeof window.SoulSwapBridge.exportBackup==='function'){
+   window.SoulSwapBridge.exportBackup(json);
+   backupMessage('Choose where to save the backup file in Android. Keep a copy outside the app.');
+  }else{
+   const blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+   a.href=url;a.download='SoulSwap_Save_Backup_'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+   backupMessage('Download started. Keep the JSON somewhere safe.');
+  }
+ }catch(e){backupMessage('Could not export backup: '+e.message,true)}
+}
+async function restoreCompleteSave(){
+ const file=$('saveBackupFile').files?.[0];
+ if(!file)return backupMessage('Choose your SoulSwap Save Backup JSON file first.',true);
+ if(file.size>80000000)return backupMessage('Backup too large: maximum 80 MB.',true);
+ try{
+  const backup=JSON.parse(await file.text());
+  if(backup?.type!=='soulswap-save-backup'||backup?.schemaVersion!=='1.0'||!backup.save||typeof backup.save!=='object'||!Array.isArray(backup.customCards)||backup.customCards.length>250)throw Error('Not a valid SoulSwap save-backup v1 file.');
+  if(!backup.customCards.every(c=>c&&typeof c==='object'&&typeof c.id==='string'&&typeof c.name==='string'))throw Error('Backup card data invalid.');
+  const newState={...newGame(),...backup.save};
+  if(!newState.owned||typeof newState.owned!=='object'||Array.isArray(newState.owned))throw Error('Backup ownership data invalid.');
+  if(!confirm('Restore this save? It will REPLACE your current local progression and imported packs.'))return;
+  const oldState=state,oldCustom=custom;
+  try{
+   await dbSet(backup.customCards);custom=backup.customCards;state=newState;state.saveVersion=3;
+   saveState();selected=null;backShowing=false;endBattle();battle=null;syncAll();go('collection');
+   backupMessage('Restore successful: '+ownedCards().length+' cards owned, '+cards.length+' total in your summon pool.');
+  }catch(err){state=oldState;custom=oldCustom;await dbSet(oldCustom).catch(()=>{});saveState();syncAll();throw err}
+ }catch(e){backupMessage('Restore failed: '+e.message,true)}
+}
 function refreshSettings(){
  $('settingsSummary').textContent=`${ownedCards().length} of ${cards.length} cards owned · ${num(state.coins)} tokens · ${num(state.credits)} training credits · ${num(state.universalFragments)} universal fragments · ${state.freeStarterUsed?'Starter pull completed':'Starter pull available'}`;
 }
@@ -272,6 +307,8 @@ async function init(){try{
  $('exportPack').onclick=()=>outputJSON({type:'soulswap-card-update',schemaVersion:'2.0',cards:custom.length?custom:cards});
  $('templatePack').onclick=()=>outputJSON({type:'soulswap-card-update',schemaVersion:'2.0',cards:[{mind:'Male Character (Series)',body:'Female Character (Series)',variant:'New Body, New Rules',rarity:'rare',flavor:'His mind, her limits.',imageBase64:'data:image/jpeg;base64,PASTE_YOUR_IMAGE_HERE'}]});
  $('restartPhrase').addEventListener('input',()=>{$('restartGame').disabled=$('restartPhrase').value.trim()!=='RESTART'});
+ $('exportSaveBackup').onclick=exportCompleteSave;
+ $('restoreSaveBackup').onclick=restoreCompleteSave;
  $('restartGame').onclick=reset;
  if(!state.freeStarterUsed)go('summon');else go('collection');
 }catch(e){console.error(e);$('collection').insertAdjacentHTML('afterbegin','<div class="notice error">Startup problem: '+escapeHTML(e.message)+'</div>')}}init();

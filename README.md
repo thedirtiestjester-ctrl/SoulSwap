@@ -1,3 +1,9 @@
+# SoulSwap v0.4.0 — Permanent Update Signing & Save Backup
+
+Previous Android debug APKs had DIFFERENT signing certificates. Android requires every installable update to have the SAME signing key. This update establishes a user-controlled permanent PKCS12 signing key, and increments versionCode to 5. The keystore is kept OUT of this public repository and passed through GitHub Actions secrets. GitHub will not publish an incorrectly signed build as an update. See SIGNING_SETUP.md.
+
+The Settings screen now supports complete Save Backup and Restore, including imported card art and owned card progression. A ONE-TIME reinstallation from the old temporary-debug-signed v0.3.2 APK is unavoidable. For future releases signed with the same key: simply install the APK over the old version, without uninstall or loss of save data.
+
 # SoulSwap v0.3.2 — Summon Button Fix
 
 **Fixed:** after the free starter summons, earning currency in battles updates the ×1 and ×10 summon buttons immediately. The Summon tab also refreshes affordability on entry. 100 tokens for ×1 and 900 tokens for ×10. Saves, odds, card IDs, and Shards remain unchanged.

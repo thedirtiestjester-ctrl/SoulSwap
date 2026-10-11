@@ -26,11 +26,55 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
-      - name: Compile debug APK
-        run: gradle --no-daemon :app:assembleDebug
-      - name: Publish installable APK artifact
+      - name: Prepare permanent signing key
+        id: signing
+        env:
+          SIGNING_KEY_B64: ${{ secrets.SOULSWAP_KEYSTORE_BASE64 }}
+          SIGNING_PASSWORD: ${{ secrets.SOULSWAP_KEYSTORE_PASSWORD }}
+        shell: bash
+        run: |
+          if [ -n "$SIGNING_KEY_B64" ] && [ -n "$SIGNING_PASSWORD" ]; then
+            printf '%s' "$SIGNING_KEY_B64" | base64 --decode > "$RUNNER_TEMP/soulswap-update.p12"
+            chmod 600 "$RUNNER_TEMP/soulswap-update.p12"
+            echo 'SOULSWAP_SIGNING_FILE='"$RUNNER_TEMP/soulswap-update.p12" >> "$GITHUB_ENV"
+            echo 'SOULSWAP_SIGNING_PASSWORD='"$SIGNING_PASSWORD" >> "$GITHUB_ENV"
+            echo 'configured=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'Signing secrets missing. Building unsigned artifact only. DO NOT distribute debug APKs signed by ephemeral runner keys.'
+            echo 'configured=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Compile unsigned release APK for private signing
+        run: gradle --no-daemon :app:assembleRelease
+      - name: Export unsigned APK (NOT INSTALLABLE)
         uses: actions/upload-artifact@v4
         with:
-          name: SoulSwap-0.3.2-debug-apk
+          name: SoulSwap-0.4.0-UNSIGNED-for-private-signing
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          retention-days: 14
+      - name: Export Android APK signing utilities for private signing
+        run: |
+          mkdir -p "$RUNNER_TEMP/apktools/lib"
+          cp "$ANDROID_HOME/build-tools/35.0.0/apksigner" "$RUNNER_TEMP/apktools/apksigner"
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" "$RUNNER_TEMP/apktools/lib/apksigner.jar"
+          cp "$ANDROID_HOME/build-tools/35.0.0/zipalign" "$RUNNER_TEMP/apktools/zipalign"
+      - name: Publish signing utility tools
+        uses: actions/upload-artifact@v4
+        with:
+          name: SoulSwap-APKSIGNER-BUILD-TOOLS
+          path: ${{ runner.temp }}/apktools/
+          retention-days: 7
+      - name: Build installable APK with permanent signing key
+        if: steps.signing.outputs.configured == 'true'
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Verify permanent signer and version
+        if: steps.signing.outputs.configured == 'true'
+        run: |
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk | head -n 2
+      - name: Publish UPDATABLE signed APK
+        if: steps.signing.outputs.configured == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SoulSwap-0.4.0-PERMANENT-SIGNED-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
