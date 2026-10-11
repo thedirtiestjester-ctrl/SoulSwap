@@ -79,7 +79,10 @@ jobs:
       - name: Verify permanent signer and version
         if: steps.signing.outputs.configured == 'true'
         run: |
-          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
+          signature_info=$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk)
+          printf "%s\\n" "$signature_info"
+          echo "$signature_info" | grep -Fq "Signer #1 certificate SHA-256 digest: 296f8e34d3ee94806fa5f8a7f346e02e3be2cf27a13abd71236f720660e0390a" || { echo "Wrong APK signing key: refusing to publish an incompatible update."; exit 1; }
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk | grep -F "name='com.soulswap.game'"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk | head -n 2
       - name: Publish UPDATABLE signed APK
         if: steps.signing.outputs.configured == 'true'
