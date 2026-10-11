@@ -1,0 +1,173 @@
+{
+  "type": "soulswap-gamebuild",
+  "schemaVersion": "1.0",
+  "version": "0.3.0-test",
+  "mainRepo": "https://github.com/thedirtiestjester-ctrl/SoulSwap",
+  "cardCount": 9,
+  "primaryGameFile": "app/src/main/assets/index.html",
+  "cardDatabase": "app/src/main/assets/seed_cards.json",
+  "handoff": "GAMEBUILD_HANDOFF.md",
+  "fileCount": 32,
+  "files": [
+    {
+      "path": ".github/workflows/android.yml",
+      "sha256": "547a13abaa36d30cd988229aa8c7566d695d9a8b9f31605c11dec76f40826ac1",
+      "bytes": 1036
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "b64cc1bd1a4fade9b11439568696cc1ab90b40a42bb4dbdcb9d45e6b9a2a9c86",
+      "bytes": 68
+    },
+    {
+      "path": "CARD_UPDATE_SCHEMA_v2.json",
+      "sha256": "3fa2338452ddaa1a7200fc3a05bdadf65a1cf87c4c7ec84e0d5141f5041650ff",
+      "bytes": 3169
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "23f83f2beb53a6f38c9239128a0e8b6cd7af35944f9f6434dbd9b740be695da3",
+      "bytes": 1435
+    },
+    {
+      "path": "GAMEBUILD_HANDOFF.md",
+      "sha256": "49aec32331f798e8920262a7b3788f1ee5e53780f39110fcfa4e6bc402409fd3",
+      "bytes": 7386
+    },
+    {
+      "path": "README.md",
+      "sha256": "b9faab804a443844c99528d84d5509697b7098341a6acfb270c3e1176cc9614f",
+      "bytes": 2017
+    },
+    {
+      "path": "app/build.gradle",
+      "sha256": "0918fd3c73d949eb05dff12fa577dd1a896792e987d8d0892a9a394f5175125c",
+      "bytes": 498
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "sha256": "da006aac7719da29fe192153113f9692a2d8366bd4d6dad56d8ba7cb36893707",
+      "bytes": 638
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-goku-18.jpg",
+      "sha256": "cd0d007b5c41ba05c86f8c83032a9decffae0c282b1736790d56d2ecb466e57b",
+      "bytes": 197860
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-goku-bulma-lab.jpg",
+      "sha256": "51d55cd986138b996c35b30464a3b049724f1eb1b3a038c23b38b762ffa18506",
+      "bytes": 895905
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-goku-bulma.jpg",
+      "sha256": "9b2ed652f33418bba2dc0a956f06be7a53c4038e3b98c50c7102887e96e6951c",
+      "bytes": 292760
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-goku-caulifla-mountain.jpg",
+      "sha256": "8dfe5cd6afa12c18aa4d06d64452ff9b04f32d127b259eaa41f186c2ba6db048",
+      "bytes": 804911
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-goku-videl-mountain.jpg",
+      "sha256": "f101320d30cbebbb291339b84f2a7604eb001dc52244c6887677479cef044bd3",
+      "bytes": 882698
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-goku-videl.jpg",
+      "sha256": "446e4671e4aa46196f332eccdf9db38e6c0d2037be06b9fa89b6353a618e0786",
+      "bytes": 201988
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-vegeta-18-gravity.jpg",
+      "sha256": "8fa58ff73a7c0b3e8ee33a556168b13d07c15b6c5a2aa9f8b85796005b28f57e",
+      "bytes": 856306
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-vegeta-bulma-badman.jpg",
+      "sha256": "38113bcf288f5d358125e27346926605b799ccf85a2ba4a40082c934d5827910",
+      "bytes": 817879
+    },
+    {
+      "path": "app/src/main/assets/cards/ss-db-vegeta-chichi-arena.jpg",
+      "sha256": "462ca6848f15fdb88eaf91e490d143f1a3fb762bb83d1942d9393cd2d2ff613d",
+      "bytes": 887990
+    },
+    {
+      "path": "app/src/main/assets/frames/frame_common.png",
+      "sha256": "55eee87a7d8909c83bb3f89834e5d93e20a5cd1a85d494ea93328db97e8088ce",
+      "bytes": 106901
+    },
+    {
+      "path": "app/src/main/assets/frames/frame_epic.png",
+      "sha256": "2c97ad436b71141cf24f6ab4dbd0541c5628275ed9f733c1e549a4439c9b9b2e",
+      "bytes": 108139
+    },
+    {
+      "path": "app/src/main/assets/frames/frame_legendary.png",
+      "sha256": "b30e067f7457663a8b15e46f5903a18b55af7c14c6d4229fd488e01e5a22109e",
+      "bytes": 107101
+    },
+    {
+      "path": "app/src/main/assets/frames/frame_mythic.png",
+      "sha256": "0a19537d1daa2906098a35ea09c0ba644a0639bedc59ea620d019aa3244bd124",
+      "bytes": 107947
+    },
+    {
+      "path": "app/src/main/assets/frames/frame_rare.png",
+      "sha256": "052f0e40367d0e2100c1d83acdca5b1351194adc773ffbb891131975f0c736c3",
+      "bytes": 108729
+    },
+    {
+      "path": "app/src/main/assets/index.html",
+      "sha256": "0c06c3272e0b24c63c8a7c6d76d67eaf0d8c5765c225f4c1e5177cc791252504",
+      "bytes": 52954
+    },
+    {
+      "path": "app/src/main/assets/seed_cards.js",
+      "sha256": "0349b6453e70f8be38db4a401f264b4cae661a5f22a13872424dc02af068ba5b",
+      "bytes": 32185
+    },
+    {
+      "path": "app/src/main/assets/seed_cards.json",
+      "sha256": "473c93e0b4fbcfaae01c2c51d91b8df84d8ced9182ed88626f0ae5518c28c265",
+      "bytes": 42428
+    },
+    {
+      "path": "app/src/main/java/com/soulswap/game/MainActivity.java",
+      "sha256": "7ff333574d6f51f713a9bd403b514d0a6e9f7d2f0a1809bad5863f1c9330d4c0",
+      "bytes": 3666
+    },
+    {
+      "path": "build.gradle",
+      "sha256": "c3c0cf04da0fc239f391c774554d97d890018ab6e37e87cc62f6070d0c8c9909",
+      "bytes": 73
+    },
+    {
+      "path": "card_update_example.json",
+      "sha256": "8400c6d48981529b5d26e80a1ecb9c2f8acb88f0d9fa705a7c63d0a849b5bd8e",
+      "bytes": 285
+    },
+    {
+      "path": "gradle.properties",
+      "sha256": "4d4c82226865844bdc85391d907a383da4a35d3a3f5348985d5ec3997ab932fe",
+      "bytes": 76
+    },
+    {
+      "path": "settings.gradle",
+      "sha256": "93280ea8e394f0cc8f033de7a36442f499ba58c53597bf1f1937ed7409473882",
+      "bytes": 269
+    },
+    {
+      "path": "test_progression.cjs",
+      "sha256": "bacb1889ba8ad63ee4226e6cf87d2d34702bc6e786be5904432236e105f6bd81",
+      "bytes": 2659
+    },
+    {
+      "path": "test_ui.py",
+      "sha256": "4ea4db6259e6fb7df453f8620ad434ac9450f6b61c47f65defbcdf9e45eabc9c",
+      "bytes": 2693
+    }
+  ]
+}

@@ -1,51 +1,27 @@
-# SoulSwap — Android Test v0.1
+# SoulSwap v0.3 — SoulForge Test
 
-An **offline first, 1v1 body-swap gacha** proof of concept, bundled with three user-provided images: **Android 18 (Goku)**, **Videl (Goku)**, **Bulma (Goku)**. All values are **prototype balancing numbers**, not canon franchise power levels.
+**Nine-card offline Android gacha game** with 1v1 fights and a single female-vessel/male-mind combined collectible card per character. Built using Java Android WebView + HTML/CSS/JS.
 
-## Play
+### Play
 
-- **Cards**: Open the image-front, flip to a separate gameplay back; inspect mind attempts, body restrictions, passives and new skills.
-- **Battle**: Select a fighter and opponent; use basic attacks, defense, learned and discovered skills. Energy and cooldowns matter; strained abilities cause recoil.
-- **Progression**: Earn credits, train cards to unlock more discovered moves at level 2–3.
-- **Summon**: Offline simulated gacha with earned currency; duplicate pulls yield shards. Test version gives all initial cards immediately.
-- **Updates**: Import `soulswap-card-update` JSON packs (schemaVersion `1.0`) or a legacy card collection array with `mind`, `body`, `imageBase64`, `prompt`. New cards are unlocked for testing automatically. Updates persist in IndexedDB, with progress stored in localStorage. The engine generates deterministic fallback stats for new pairings; add authored stats in the pack for high-quality balance.
+Fresh games own zero cards. Visit Summon for the free 10-pull (one guaranteed Epic/SR or better). View card details in Collection, fight in Battle, and spend shards in the **Shards** workshop. Import additional card JSON through Updates. Settings → Restart begins a fresh run (with optional deletion of previously imported packs).
 
-## Build Android debug APK
+### SoulForge rules
 
-Push sources to GitHub and use the **Build SoulSwap Android APK** Actions workflow, or run `gradle :app:assembleDebug` with Java 17, Gradle 8.10.2 and Android SDK 35. Output is `app/build/outputs/apk/debug/app-debug.apk`.
+Duplicate card → +2 character shards. Awakening ranks +1..+5 cost 2,4,12,20,30 respectively; unlock bonuses in HP/stats, passive, techniques, strain, ultimate and cosmetic aura. Technique levels +1 and +2 cost 3 and 7 shards. Fuse 4 character shards for one Soul Fragment; universal fragments can substitute for up to half of an awakening cost. All nine built-in cards and all future imported cards use these rules.
 
-No network permission, billing libraries or accounts are required. App works fully offline. Source uses only Android WebView and static HTML/CSS/JS assets.
+### Development
 
-## Update pack format
+`app/src/main/assets/index.html` — main UI and battle engine.
+`app/src/main/assets/seed_cards.json` — nine authored cards (complete mechanics).
+`app/src/main/assets/cards/` — nine canonical images.
+`app/src/main/assets/frames/` — five locked rarity-overlay PNGs.
+`CARD_UPDATE_SCHEMA_v2.json` — template for future card updates.
+`GAMEBUILD_HANDOFF.md` — complete project constraints for a future chat.
+`CHANGELOG.md` — development history.
 
-```
-{
-  "type": "soulswap-card-update",
-  "schemaVersion": "1.0",
-  "cards": [
-    {
-      "mind": "Son Goku (Dragon Ball)",
-      "body": "Android 18 (Dragon Ball)",
-      "imageBase64": "data:image/jpeg;base64,...",
-      "rarity": "legendary",
-      "variant": "Limitless Engine",
-      "flavor": "Same fighting spirit. A body built to keep going."
-    }
-  ]
-}
-```
+Build: `gradle --no-daemon :app:assembleDebug` using Java 17 and Android SDK 35, or run the GitHub workflow. App ID `com.soulswap.game`, version `0.3.0-test`.
 
-Supported optional fields: `id`, `name`, `power`, `hp`, `str`, `spd`, `end`, `dex`, `eng`, `focus`, `sync`, `passive`, `limitation`, `lore`, `abilities`, `prompt`. `abilities` entries take `id`, `name`, `source`, `description`, `manifestation`, `kind`, `scale`, `cost`, `cooldown`, `unlock` (minimum level).
+Save storage is WebView localStorage key `soulswap-save-v1` plus imported JSON cards in IndexedDB. This APK is an unofficial fan development prototype.
 
-Original input files and backgrounds are for this user's private franchise-fan prototype; distribution/commercial use of licensed characters/art may require authorization.
-
-
-## v0.2 — Starter Summons, Settings and Random Matchmaking
-
-Fresh installations start with an **empty owned collection** and 0 currency. Open **Soul Summon** for a one-time free 10-pull containing **at least one SR (Epic) or higher** card; duplicates become shards. Normal paid summons use earned test tokens. JSON card imports add cards to the *pool*, not to player ownership.
-
-**Settings → Restart Game** resets player progress and the one-time starter claim with a typed `RESTART` confirmation. By default installed JSON packs remain available in the summon pool; optionally remove them too. Older v0.1 saves are preserved on upgrade until you deliberately restart.
-
-**1v1 Arena:** an opponent is randomly chosen from installed cards. Opponent level is 95% normal (your level ±2) or 5% elite (+3 to +10), clamped to level 1–25. Elite encounters are announced before your first action. If only one card is installed, mirror matches are allowed.
-
-Debug APK: GitHub Actions → `Build SoulSwap Android APK` → artifact named `SoulSwap-0.2-debug-apk`.
+**For future chats always provide the new versioned GAMEBUILD ZIP along with the APK**. The GameBuild archive contains the *entire* source, assets and handoff notes; an APK alone is not sufficient to resume development reliably.

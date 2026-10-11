@@ -1,0 +1,116 @@
+{
+  "type": "soulswap-card-update",
+  "schemaVersion": "2.0",
+  "packId": "example-future-characters-v1",
+  "name": "Example character update",
+  "cards": [
+    {
+      "id": "ss-example-mind-body-variant",
+      "mind": "Adult Male Mind (Source IP)",
+      "body": "Adult Female Vessel (Source IP)",
+      "name": "Vessel (Mind)",
+      "variant": "New Mind, New Body",
+      "rarity": "rare",
+      "flavor": "A new self, the same will.",
+      "power": 4900,
+      "hp": 700,
+      "str": 54,
+      "spd": 63,
+      "end": 50,
+      "dex": 58,
+      "eng": 48,
+      "focus": 72,
+      "sync": 55,
+      "level": 1,
+      "passive": {
+        "name": "Adaptive Instinct",
+        "kind": "hit_energy",
+        "value": 8,
+        "description": "Basic strikes restore 8 energy."
+      },
+      "limitation": "The body cannot use techniques that its anatomy or energy capacity does not support.",
+      "lore": "A new body changes how existing skills manifest.",
+      "abilities": [
+        {
+          "id": "mind-a",
+          "name": "Adapted Strike",
+          "source": "mind",
+          "description": "A remembered strike adapted to the new physiology.",
+          "manifestation": "adapted",
+          "kind": "damage",
+          "scale": 1.05,
+          "cost": 12,
+          "cooldown": 0,
+          "unlock": 1
+        },
+        {
+          "id": "mind-b",
+          "name": "Strained Technique",
+          "source": "mind",
+          "description": "A strenuous attempt using remembered training.",
+          "manifestation": "strained",
+          "kind": "damage",
+          "scale": 1.25,
+          "cost": 22,
+          "cooldown": 1,
+          "unlock": 1
+        },
+        {
+          "id": "body-a",
+          "name": "Body Discovered Guard",
+          "source": "discovered",
+          "description": "New defensive instinct gained in this body.",
+          "manifestation": "full",
+          "kind": "guard",
+          "scale": 0,
+          "cost": 14,
+          "cooldown": 2,
+          "unlock": 2
+        },
+        {
+          "id": "body-b",
+          "name": "Physical Momentum",
+          "source": "discovered",
+          "description": "An attack exploiting the vessel's natural strengths.",
+          "manifestation": "full",
+          "kind": "damage",
+          "scale": 1.35,
+          "cost": 20,
+          "cooldown": 2,
+          "unlock": 3
+        },
+        {
+          "id": "ultimate",
+          "name": "Synced Limit Break",
+          "source": "ultimate",
+          "description": "A risky combined finisher.",
+          "manifestation": "strained",
+          "kind": "damage",
+          "scale": 2.0,
+          "cost": 60,
+          "cooldown": 3,
+          "unlock": 5
+        }
+      ],
+      "progression": {
+        "system": "soul-shards-v1",
+        "duplicateShards": 2,
+        "awakeningCosts": [
+          2,
+          4,
+          12,
+          20,
+          30
+        ],
+        "skillCosts": [
+          3,
+          7
+        ],
+        "maxAwakening": 5,
+        "maxSkillRank": 2,
+        "fusionRate": 4
+      },
+      "imageBase64": "data:image/jpeg;base64,REPLACE_WITH_ACTUAL_IMAGE_BYTES"
+    }
+  ]
+}
