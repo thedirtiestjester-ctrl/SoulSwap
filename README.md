@@ -38,3 +38,14 @@ No network permission, billing libraries or accounts are required. App works ful
 Supported optional fields: `id`, `name`, `power`, `hp`, `str`, `spd`, `end`, `dex`, `eng`, `focus`, `sync`, `passive`, `limitation`, `lore`, `abilities`, `prompt`. `abilities` entries take `id`, `name`, `source`, `description`, `manifestation`, `kind`, `scale`, `cost`, `cooldown`, `unlock` (minimum level).
 
 Original input files and backgrounds are for this user's private franchise-fan prototype; distribution/commercial use of licensed characters/art may require authorization.
+
+
+## v0.2 — Starter Summons, Settings and Random Matchmaking
+
+Fresh installations start with an **empty owned collection** and 0 currency. Open **Soul Summon** for a one-time free 10-pull containing **at least one SR (Epic) or higher** card; duplicates become shards. Normal paid summons use earned test tokens. JSON card imports add cards to the *pool*, not to player ownership.
+
+**Settings → Restart Game** resets player progress and the one-time starter claim with a typed `RESTART` confirmation. By default installed JSON packs remain available in the summon pool; optionally remove them too. Older v0.1 saves are preserved on upgrade until you deliberately restart.
+
+**1v1 Arena:** an opponent is randomly chosen from installed cards. Opponent level is 95% normal (your level ±2) or 5% elite (+3 to +10), clamped to level 1–25. Elite encounters are announced before your first action. If only one card is installed, mirror matches are allowed.
+
+Debug APK: GitHub Actions → `Build SoulSwap Android APK` → artifact named `SoulSwap-0.2-debug-apk`.
