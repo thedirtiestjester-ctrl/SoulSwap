@@ -1,3 +1,9 @@
+# SoulSwap v0.3.2 — Summon Button Fix
+
+**Fixed:** after the free starter summons, earning currency in battles updates the ×1 and ×10 summon buttons immediately. The Summon tab also refreshes affordability on entry. 100 tokens for ×1 and 900 tokens for ×10. Saves, odds, card IDs, and Shards remain unchanged.
+
+The Android APK includes the original nine-card Dragon Ball pool. Install the six-card Naruto Wave 1 JSON pack in Updates to expand the pool to 15 cards without requiring a new APK. A separate complete GAMEBUILD v0.3.2 handoff archive contains the 15-card source, tests, and history.
+
 # SoulSwap v0.3 — SoulForge Test
 
 **Nine-card offline Android gacha game** with 1v1 fights and a single female-vessel/male-mind combined collectible card per character. Built using Java Android WebView + HTML/CSS/JS.
